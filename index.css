@@ -1,0 +1,38 @@
+/* @media screen and (max-width:480px){ */
+#top div{
+	font-size:1.3em;
+	padding-bottom:5px;
+}
+#top input,#top select{
+    border:solid 1px black;
+	font-size:.8em;
+	
+}
+.bubbles:before,.full:before{
+	display: inline-block;
+	font-family: FontAwesome;
+	font-size: 2em;
+}
+.bubbles:before{
+	content: "\f10c";
+}
+.full:before{
+	content: "\f111";
+}
+span.food{
+	margin-left:3px;
+}
+span.food:after{
+	content:",";
+}
+#bubbles{
+	border-collapse:collapse;
+}
+#bubbles td{
+	border-bottom:solid black 1px;
+}
+#bubbles td:first-child{
+	font-size:1.3em;
+	vertical-align:top;
+}
+/* } */
