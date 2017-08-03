@@ -19,15 +19,25 @@
 	
 	if($_GET && $_GET["date"]){
 		$used = $conn->query("select * from bubblesused where email = 'posisme@gmail.com' and date = '".$_GET["date"]."' order by usedkey");
+		$ex = $conn->query("select * from exercize where email = 'posisme@gmail.com' and date = '".$_GET["date"]."' order by exkey");
 	}
 	else{
 		$used = $conn->query("select * from bubblesused where email = 'posisme@gmail.com' and date = '".date("Y-m-d")."' order by usedkey");
+		$ex = $conn->query("select * from exercize where email = 'posisme@gmail.com' and date = '".date("Y-m-d")."' order by exkey");
 	}
 	while($use = $used->fetch_assoc()){
 		echo "{bubble:'".$use["bubble"]."',eat:'".$use["eat"]."',meal:'".$use["meal"]."'},";
 	}
+	
 ?>
-	]
+	];
+	var ex = [
+<?php
+	while($exe = $ex->fetch_assoc()){
+		echo "'".$exe["type"]."',";
+	}
+?>
+	];
 </script>
 <div id='top'>
 <div>Name:<span id='name'><select><option value='posisme@gmail.com'>Randy Pospisil</option></select></span></div>
@@ -72,7 +82,7 @@
 </table>
 <table id='exercise'>
 <tr><th>Exercise</th><th>Aerobic</th><th>Strengthening</th></tr>
-<tr><th>Minutes</th><td id='aerobic'></td><td id='strength'></td></tr>
+<tr><th>30 Minutes</th><td id='aerobic'><span class='exbubble'></span></td><td id='strength'><span class='exbubble'></span></td></tr>
 </table>
 <table id='breakfast'>
 <tr class='c'><td class='bubdet'><span class='numb'></span> C:</td><td class='foods'></td></tr>

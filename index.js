@@ -1,6 +1,7 @@
 $(function(){
 	
 	$(".bubbles").click(addbubble);
+	$(".exbubble").click(addex);
 	$("#date input").datepicker({
 		dateFormat:"yy-mm-dd",
 	});
@@ -22,11 +23,9 @@ $(function(){
 		 
 	}
 	
-	// for(i in used){
-		// for(j=1;j<(used[i]+1);j++){
-			// 
-		// }
-	// }
+	for(i=0;i<ex.length;i++){
+		$("#"+ex[i]+" span").addClass("exfull");
+	}
 });
 
 function addbubble(e){
@@ -75,10 +74,52 @@ function addbubble(e){
 	
 }
 
+function addex(e){
+	var event = event || e;
+	var url = "";
+	var bubble = $(event.target).closest("td").attr('id');
+	if($(event.target).hasClass("exfull")){
+		var c = confirm("Remove bubble?");
+		console.log(c);
+		if(!c){
+			return false;
+		}
+		else{
+			var eat = $(event.target).attr('eat');
+			url = "/bubble/addlist.php?mode=deleteex";
+		}
+	}
+	else{
+		url = "/bubble/addlist.php?mode=addex";
+	}
+	url += "&type="+bubble+"&date="+$("#date input").val()+"&email="+$("#name select").val();
+	
+	$.ajax({
+		url:url,
+		success:function(res){
+			console.log(res);
+			if($(event.target).hasClass("exfull")){
+				$(event.target).removeClass("exfull");
+				reload(event);
+				
+			}
+			else{
+				$(event.target).addClass("exfull");
+			}
+			
+		},
+		error:function(err){
+			alert('error');
+			console.log(err);
+		}
+	})
+	
+}
+
 function reload(e){
 	var event = event || e;
 	if($(event.target).attr('type') == "text"){
-		var newloc = window.location.href + "?date="+$("#date input").val();
+		var newloc = window.location.origin + window.location.pathname+"?date="+$("#date input").val();
 	}
 	else{
 		var newloc = window.location;
