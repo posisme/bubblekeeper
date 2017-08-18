@@ -48,7 +48,7 @@ function showeat(e){
 function killballoon(){
 	$("#balloon").remove();
 }
-
+var lasteat = "";
 function addbubble(e){
 	var event = event || e;
 	var url = "";
@@ -65,7 +65,8 @@ function addbubble(e){
 		}
 	}
 	else{
-		var eat = prompt("What did you eat?");
+		var eat = prompt("What did you eat?",lasteat);
+		lasteat = eat;
 		url = "/bubble/addlist.php?mode=add&meal="+$("#meal select").val();
 	}
 	url += "&bubble="+bubble+"&date="+$("#date input").val()+"&email="+$("#name select").val()+"&eat="+eat;
