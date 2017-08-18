@@ -2,15 +2,25 @@ $(function(){
 	
 	$(".bubbles").click(addbubble);
 	$(".exbubble").click(addex);
+	$(".overbubble").click(overbubble);
 	$("#date input").datepicker({
 		dateFormat:"yy-mm-dd",
 	});
 	
 	$("#date input").change(reload);
 	for(i=0;i<used.length;i++){
+		if($("#"+used[i].bubble+" span.bubbles:not(.full)").length == 0){
+			$("#"+used[i].bubble+" td:last-child").append("<span class='bubbles fulloverbubble'></span>");
+			$("#"+used[i].bubble+" span.overbubble").show();
+		}
+		else if($("#"+used[i].bubble+" span.bubbles:not(.full)").length == 1){
+			//$("#"+used[i].bubble+" td:last-child").append("<span class='bubbles fulloverbubble'></span>");
+			$("#"+used[i].bubble+" span.overbubble").show();
+		}
 		var f = $("#"+used[i].bubble+" span.bubbles:not(.full)");
 		$(f).first().addClass("full");
 		$(f).first().attr('eat',used[i].eat);
+		//$(f).first().hover(showeat);
 		if(used[i].bubble == "milk"){
 			$("#"+used[i].meal).append("<span class='food'>"+used[i].eat+"</span>");
 		}
@@ -27,6 +37,17 @@ $(function(){
 		$("#"+ex[i]+" span").addClass("exfull");
 	}
 });
+
+function showeat(e){
+	var event = event || e;
+	var pos = $(event.target).position();
+	var eat = $("<div id='balloon' style='top:"+pos.top+";left:"+pos.left+"'>"+$(event.target).attr('eat')+"</div>").click(killballoon);
+	$("body").append(eat);
+	
+}
+function killballoon(){
+	$("#balloon").remove();
+}
 
 function addbubble(e){
 	var event = event || e;
@@ -114,6 +135,31 @@ function addex(e){
 		}
 	})
 	
+}
+
+function overbubble(e){
+	var event = event || e;
+	var url = "";
+	var bubble = $(event.target).closest("tr").attr('id');
+	var eat = prompt("What did you eat?");
+	url = "/bubble/addlist.php?mode=add&meal="+$("#meal select").val();
+	url += "&bubble="+bubble+"&date="+$("#date input").val()+"&email="+$("#name select").val()+"&eat="+eat;
+	
+	$.ajax({
+		url:url,
+		success:function(res){
+			console.log(res);
+			$(event.target).addClass("fulloverbubble");
+			
+			$(event.target).attr('eat',eat);
+			$("#"+$("#meal select").val()).append("<p>"+eat+"</p>");
+			
+		},
+		error:function(err){
+			alert('error');
+			console.log(err);
+		}
+	})
 }
 
 function reload(e){

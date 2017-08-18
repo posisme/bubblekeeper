@@ -15,15 +15,15 @@
 <?php
 	date_default_timezone_set('America/Chicago');
 	$conn = new mysqli('localhost','home_user','hdaslkjdsflkhasdd&*8768','meals');
-	$res = $conn->query("select * from bubblesuser join bubbles on bubbles.short = bubblesuser.bubble where email = 'posisme@gmail.com'");
+	$res = $conn->query("select * from bubblesuser join bubbles on bubbles.short = bubblesuser.bubble where email = '".$_SERVER['REMOTE_USER']."'");
 	
 	if($_GET && $_GET["date"]){
-		$used = $conn->query("select * from bubblesused where email = 'posisme@gmail.com' and date = '".$_GET["date"]."' order by usedkey");
-		$ex = $conn->query("select * from exercize where email = 'posisme@gmail.com' and date = '".$_GET["date"]."' order by exkey");
+		$used = $conn->query("select * from bubblesused where email = '".$_SERVER['REMOTE_USER']."' and date = '".$_GET["date"]."' order by usedkey");
+		$ex = $conn->query("select * from exercize where email = '".$_SERVER['REMOTE_USER']."' and date = '".$_GET["date"]."' order by exkey");
 	}
 	else{
-		$used = $conn->query("select * from bubblesused where email = 'posisme@gmail.com' and date = '".date("Y-m-d")."' order by usedkey");
-		$ex = $conn->query("select * from exercize where email = 'posisme@gmail.com' and date = '".date("Y-m-d")."' order by exkey");
+		$used = $conn->query("select * from bubblesused where email = '".$_SERVER['REMOTE_USER']."' and date = '".date("Y-m-d")."' order by usedkey");
+		$ex = $conn->query("select * from exercize where email = '".$_SERVER['REMOTE_USER']."' and date = '".date("Y-m-d")."' order by exkey");
 	}
 	while($use = $used->fetch_assoc()){
 		echo "{bubble:'".$use["bubble"]."',eat:'".$use["eat"]."',meal:'".$use["meal"]."'},";
@@ -40,7 +40,15 @@
 	];
 </script>
 <div id='top'>
-<div>Name:<span id='name'><select><option value='posisme@gmail.com'>Randy Pospisil</option></select></span></div>
+<div>Name:<span id='name'><select><option value='posisme@gmail.com'>Randy Pospisil</option><option value='kim@thrown-iowa.com'>Kim Pospisil</option></select></span></div>
+<script>
+	$(function(){
+<?php
+	echo "var thisval = '".$_SERVER['REMOTE_USER']."';\n";
+?>
+		$("#name select").val(thisval);
+	});
+</script>
 <div>Date:<span id='date'>
 <?php
 	if($_GET && $_GET["date"]){
@@ -74,6 +82,7 @@
 		for($i=0;$i<$row["numb"];$i++){
 			echo "<span class='bubbles'></span>";
 		}
+		echo "<span class='overbubble' style='display:none;'></span>";
 		echo "</td></tr>";
 	}
 	
@@ -106,5 +115,7 @@
 <tr class='v'><td class='bubdet'><span class='numb'></span> V:</td><td class='foods'></td></tr>
 </table>
 <p>Snack 3 M: <span id='m3'></span></p>
+<hr>
+<p><a href='/bubble/reportdiv.php'>Report</a></p>
 </body>
 </html>

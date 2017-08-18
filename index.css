@@ -8,7 +8,7 @@
 	font-size:.8em;
 	
 }
-.bubbles:before,.full:before,.exbubble:before{
+.bubbles:before,.full:before,.exbubble:before,.overbubble:before{
 	display: inline-block;
 	font-family: FontAwesome;
 	font-size: 2em;
@@ -18,6 +18,14 @@
 }
 .exfull:before,.full:before{
 	content: "\f111";
+}
+.overbubble:before{
+	content: "\f096";
+	float:right;
+}
+.fulloverbubble:before{
+	content: "\f0c8";
+	
 }
 span.food{
 	margin-left:3px;
@@ -44,5 +52,13 @@ span.food:after{
 }
 #exercise td{
 	text-align:center;
+}
+#balloon{
+	display:block;
+	position:fixed;
+	border:1px solid black;
+	border-radius:15px;
+	padding:15px;
+	background:white;
 }
 /* } */
