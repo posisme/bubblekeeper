@@ -3,6 +3,8 @@ $(function(){
 	$(".bubbles").click(addbubble);
 	$(".exbubble").click(addex);
 	$(".overbubble").click(overbubble);
+	$("#savedbubblesend").click(savedbubble);
+	$("#newsaved").click(newsavedpopup);
 	$("#date input").datepicker({
 		dateFormat:"yy-mm-dd",
 	});
@@ -37,6 +39,66 @@ $(function(){
 		$("#"+ex[i]+" span").addClass("exfull");
 	}
 });
+
+function newsavedpopup(){
+	$(".popup").show();
+}
+function killpopup(){
+	
+	$(".popup").hide();
+}
+function addpopuprow(){
+	var cl = $(".popup table tr:last-child").clone();
+	$(".popup table").append(cl);
+}
+function delpopuprow(row){
+	if(!$(row).closest('tr').is(":nth-child(2)")){
+		$(row).closest('tr').remove();
+	}
+	
+}
+
+function savepopup(){
+	var data = {};
+	data.gn = $("#groupnamepopup").val().replace(/[^a-z0-9]/gi,"-");
+	
+	data.p = [];
+	$(".popup table tr").each(function(){
+		if(!$(this).is(":first-child")){
+			data.p.push({eat:$(this).find("input").val(),bubble:$(this).find("select").val()});
+		}
+	});
+	$.ajax({
+		url:"/bubble/addlist.php?mode=addgroup&email="+$("#name select").val(),
+		type:"POST",
+		data:data,
+		success:function(r){
+			console.log(r);
+			reload(event);
+		},
+		error:function(err){
+			alert("error");
+			console.log(err);
+		}
+	})
+}
+function savedbubble(e){
+	var event = event || e;
+	var sk = $("#savedbubble").val();
+	var oksk = confirm("Add "+sk+"?");
+	if(oksk && sk != ""){
+		$.ajax({
+			url:"/bubble/addlist.php?mode=savedbubble&sk="+sk+"&email="+$("#name select").val()+"&date="+$("#date input").val()+"&meal="+$("#meal select").val(),
+			success:function(r){
+				reload(event);
+			},
+			error:function(err){
+				alert("error");
+				console.log(err);
+			}
+		})
+	}
+}
 
 function showeat(e){
 	var event = event || e;

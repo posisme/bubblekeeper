@@ -61,4 +61,22 @@ span.food:after{
 	padding:15px;
 	background:white;
 }
+.popup{
+	background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    height: 50%;
+    width: 75%;
+    padding: 10px;
+    position: fixed;
+    top: 33%;
+    left: 10%;
+    display: none;
+}
+.popup table{
+	width:100%;
+}
+.popup table input{
+	width:100%;
+}
 /* } */

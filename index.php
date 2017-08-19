@@ -73,7 +73,9 @@
 <h2><span id='totalcalories'></span> Calories</h2>
 <table id='bubbles'>
 <?php
+	$groupids = array();
 	while($row = $res->fetch_assoc()){
+		$groupids[] = $row["short"];
 		echo "<tr lgroup='".$row["groupid"]."' id='".$row["short"]."'><td>".$row["longdesc"];
 		if($row["groupid"] != ""){
 			echo " (".$row["groupid"].")";
@@ -115,6 +117,38 @@
 <tr class='v'><td class='bubdet'><span class='numb'></span> V:</td><td class='foods'></td></tr>
 </table>
 <p>Snack 3 M: <span id='m3'></span></p>
+<hr>
+<h2>Saved Bubble Group</h2>
+<p><select id='savedbubble'>
+	<option value=''>Select...</option>
+<?php
+	$sb = $conn->query("select group_concat(bubble) as b,group_concat(eat) as e, groupname from savedbubble where email = '".$_SERVER['REMOTE_USER']."' group by groupname");
+	while($s = $sb->fetch_assoc()){
+		echo "<option value='".$s["groupname"]."'>".$s["groupname"]."</option>\n";
+	}
+?>
+</select> 
+<button id='savedbubblesend'>Go</button>  
+<button id='newsaved'>New</button>
+</p>
+
+<div class='popup'>
+<div id='killpopup' onclick='killpopup()'>X</div>
+<p>Group Name (no spaces) <input type='text' id='groupnamepopup' /></p>
+<table>
+<tr><th>Food</th><th>Bubble</th><th><span onclick='addpopuprow()'>+</span></th></tr>
+<tr class='popuptrow'><td><input type='text' class='popupeat' /></td><td><select class='popupbub'>
+<option value=''>Select...</option>
+<?php
+	foreach($groupids as $g){
+		echo "<option value='".$g."'>".$g."</option>\n";
+	}
+?>
+</select>
+</td><td><span onclick='delpopuprow(this)'>X</span></td></tr>
+</table>
+<p><button onclick='savepopup()'>Save</button></p>
+</div>
 <hr>
 <p><a href='/bubble/reportdiv.php'>Report</a></p>
 </body>
