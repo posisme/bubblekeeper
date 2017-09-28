@@ -49,6 +49,7 @@ $("body").on("swipeleft",swipeleft);
 	for(i=0;i<ex.length;i++){
 		$("#"+ex[i]+" span").addClass("exfull");
 	}
+	$("#meal select").change();
 });
 
 function swipeleft(){
