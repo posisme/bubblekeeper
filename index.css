@@ -1,13 +1,17 @@
 /* @media screen and (max-width:480px){ */
-#top div{
-	font-size:1.3em;
-	padding-bottom:5px;
-}
-#top input,#top select{
-    border:solid 1px black;
-	font-size:.8em;
+/* .ui-select{ */
+	/* height:20px; */
+	/* width:100%; */
+/* } */
+/* #top div{ */
+	/* font-size:1.3em; */
+	/* padding-bottom:5px; */
+/* } */
+/* #top input,#top select{ */
+    /* border:solid 1px black; */
+	/* font-size:.8em; */
 	
-}
+/* } */
 .bubbles:before,.full:before,.exbubble:before,.overbubble:before{
 	display: inline-block;
 	font-family: FontAwesome;

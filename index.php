@@ -1,29 +1,48 @@
 <html>
 <head>
 <title>Bubble Keeper</title>
-<meta name='viewport' content='width=device-width; maximum-scale=1; minimum-scale=1;' />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<meta name='viewport' content='width=device-width, initial-scale=1' />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
 <script src='index.js'></script>
 <link rel="stylesheet" href="/font-awesome-4.7.0/css/font-awesome.min.css">
 <link rel='stylesheet' type='text/css' href='index.css'>
 </head>
 <body>
+<?php
+session_start();
+
+if(sha1("H4y3u3".$_COOKIE["user"]."Wolverine") == $_COOKIE["auth"]){
+	$_SESSION['valid'] = true;
+    $_SESSION['timeout'] = time();
+    $_SESSION['username'] = $_COOKIE["user"];
+}
+if(isset($_SESSION["valid"]) && !empty($_SESSION["valid"]) && $_SESSION["valid"] === TRUE){
+	
+}
+else{
+	echo "<script> window.location.assign('/auth'); </script>";
+}
+?>
 <script>
 	var used = [
 <?php
 	date_default_timezone_set('America/Chicago');
-	$conn = new mysqli('localhost','home_user','hdaslkjdsflkhasdd&*8768','meals');
-	$res = $conn->query("select * from bubblesuser join bubbles on bubbles.short = bubblesuser.bubble where email = '".$_SERVER['REMOTE_USER']."'");
+	$config = parse_ini_file('/var/www/bubblesconfig.ini');
+	
+	$conn = new mysqli($config["mysqlhost"],$config["mysqluser"],$config["mysqlpassword"],$config["mysqldbname"]);
+	$res = $conn->query("select * from bubblesuser join bubbles on bubbles.short = bubblesuser.bubble where email = '".$_SESSION['username']."'");
 	
 	if($_GET && $_GET["date"]){
-		$used = $conn->query("select * from bubblesused where email = '".$_SERVER['REMOTE_USER']."' and date = '".$_GET["date"]."' order by usedkey");
-		$ex = $conn->query("select * from exercize where email = '".$_SERVER['REMOTE_USER']."' and date = '".$_GET["date"]."' order by exkey");
+		$used = $conn->query("select * from bubblesused where email = '".$_SESSION['username']."' and date = '".$_GET["date"]."' order by usedkey");
+		$ex = $conn->query("select * from exercize where email = '".$_SESSION['username']."' and date = '".$_GET["date"]."' order by exkey");
 	}
 	else{
-		$used = $conn->query("select * from bubblesused where email = '".$_SERVER['REMOTE_USER']."' and date = '".date("Y-m-d")."' order by usedkey");
-		$ex = $conn->query("select * from exercize where email = '".$_SERVER['REMOTE_USER']."' and date = '".date("Y-m-d")."' order by exkey");
+		$used = $conn->query("select * from bubblesused where email = '".$_SESSION['username']."' and date = '".date("Y-m-d")."' order by usedkey");
+		$ex = $conn->query("select * from exercize where email = '".$_SESSION['username']."' and date = '".date("Y-m-d")."' order by exkey");
 	}
 	while($use = $used->fetch_assoc()){
 		echo "{bubble:'".$use["bubble"]."',eat:'".$use["eat"]."',meal:'".$use["meal"]."'},";
@@ -39,28 +58,35 @@
 ?>
 	];
 </script>
-<div id='top'>
-<div>Name:<span id='name'><select><option value='posisme@gmail.com'>Randy Pospisil</option><option value='kim@thrown-iowa.com'>Kim Pospisil</option></select></span></div>
+<div id='top' data-role='header'>
+<div><span>Name:</span><span id='name'><select class='smallselect'>
+<?php
+	$rt = $conn->query("select distinct email from bubblesuser");
+	while($r = $rt->fetch_assoc()){
+		echo "<option value='".$r["email"]."'>".$r["email"]."</option>";
+	}
+?>
+</select></span></div>
 <script>
 	$(function(){
 <?php
-	echo "var thisval = '".$_SERVER['REMOTE_USER']."';\n";
+	echo "var thisval = '".$_SESSION['username']."';\n";
 ?>
 		$("#name select").val(thisval);
 	});
 </script>
-<div>Date:<span id='date'>
+<div><span>Date:</span><span id='date'>
 <?php
 	if($_GET && $_GET["date"]){
-		echo "<input type='text' value='".$_GET["date"]."' />";
+		echo "<input type='text' class='smalltext' value='".$_GET["date"]."' />";
 	}
 	else{
-		echo "<input type='text' value='".date("Y-m-d")."' />";
+		echo "<input type='text' class='smalltext' value='".date("Y-m-d")."' />";
 	}
 ?>
 
 </span></div>
-<div>Meal:<span id='meal'><select>
+<div><span>Meal:</span><span id='meal'><select class='smallselect'>
 <option value='breakfast'>Breakfast</option>
 <option value='m1'>Milk 1</option>
 <option value='lunch'>Lunch</option>
@@ -69,6 +95,7 @@
 <option value='m3'>Milk 3</option>
 </select>
 </span></div></div>
+<div role='main'>
 <h1>Guide to Healthy Eating and Exercise</h1>
 <h2><span id='totalcalories'></span> Calories</h2>
 <table id='bubbles'>
@@ -151,5 +178,6 @@
 </div>
 <hr>
 <p><a href='/bubble/reportdiv.php'>Report</a></p>
+</div>
 </body>
 </html>

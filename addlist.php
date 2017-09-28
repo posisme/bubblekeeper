@@ -2,8 +2,9 @@
 
 date_default_timezone_set('America/Chicago');
 
-$conn = new mysqli('localhost','home_user','hdaslkjdsflkhasdd&*8768','meals');
-$url = "";
+$config = parse_ini_file('/var/www/bubblesconfig.ini');
+	
+$conn = new mysqli($config["mysqlhost"],$config["mysqluser"],$config["mysqlpassword"],$config["mysqldbname"]);$url = "";
 if($_GET["mode"] == "savedbubble"){
 	
 	$r = $conn->query("select * from savedbubble where email = '".$_GET["email"]."' and groupname = '".$_GET["sk"]."'");

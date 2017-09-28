@@ -1,3 +1,6 @@
+$(document).on('pageinit',function(){
+		
+});
 $(function(){
 	
 	$(".bubbles").click(addbubble);
@@ -5,6 +8,9 @@ $(function(){
 	$(".overbubble").click(overbubble);
 	$("#savedbubblesend").click(savedbubble);
 	$("#newsaved").click(newsavedpopup);
+$("body").on("swipeleft",swipeleft);
+	$("body").on("swiperight",swiperight);
+	
 	$("#date input").datepicker({
 		dateFormat:"yy-mm-dd",
 	});
@@ -34,12 +40,32 @@ $(function(){
 		}
 		 
 	}
+	$(".food").each(function(){
+		if($(this).text() == $(this).next().text()){
+			$(this).remove();
+		}
+	});
 	
 	for(i=0;i<ex.length;i++){
 		$("#"+ex[i]+" span").addClass("exfull");
 	}
 });
 
+function swipeleft(){
+	var newdate = new Date($("#date input").val()+" 12:00:00");
+	newdate.setDate(newdate.getDate()+1);
+	newdate = $.datepicker.formatDate("yy-mm-dd",newdate);
+	var newloc = window.location.origin + window.location.pathname+"?date="+newdate;
+	window.location = newloc;
+}
+
+function swiperight(){
+	var newdate = new Date($("#date input").val()+" 12:00:00");
+	newdate.setDate(newdate.getDate()-1);
+	newdate = $.datepicker.formatDate("yy-mm-dd",newdate);
+	var newloc = window.location.origin + window.location.pathname+"?date="+newdate;
+	window.location = newloc;
+}
 function newsavedpopup(){
 	$(".popup").show();
 }

@@ -9,8 +9,9 @@
 <p><textarea id='bubblesuser' style='width:100%;height:20em;'>
 <?php
 date_default_timezone_set('America/Chicago');
-$conn = new mysqli('localhost','home_user','hdaslkjdsflkhasdd&*8768','meals');
-$rep = $conn->query("select * from bubblesuser");
+$config = parse_ini_file('/var/www/bubblesconfig.ini');
+	
+$conn = new mysqli($config["mysqlhost"],$config["mysqluser"],$config["mysqlpassword"],$config["mysqldbname"]);$rep = $conn->query("select * from bubblesuser");
 while($r = $rep->fetch_array(MYSQLI_NUM)){
 	foreach($r as $a){
 		echo $a."\t";
